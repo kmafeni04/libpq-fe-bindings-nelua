@@ -1,0 +1,22 @@
+##[==[
+-- import Nelua Decl plugin and filesystem utils.
+local nldecl = require 'nelua.plugins.nldecl'
+local fs = require 'nelua.utils.fs'
+
+-- generate nelua bindings file
+nldecl.generate_bindings_file {
+  output_file = 'libpq-fe.nelua',
+  parse_includes = {"<libpq-fe.h>"},
+  include_names = {'^PQ', "^PG", "^pg", "^pq", "^lo", "^LIBPQ"},
+  output_head = [=[##[[
+  cinclude "<libpq-fe.h>"
+  linklib "pq"
+]]
+]=],
+output_foot = [[
+global function PQfreeNotify(ptr: pointer)
+  PQfreemem(ptr)
+end
+]]
+}
+]==]
